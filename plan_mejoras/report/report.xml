@@ -1,0 +1,25 @@
+<odoo>
+    <record id="plan_mejoras.paperformat_portrait_a4" model="report.paperformat">
+            <field name="name">Formato A4 Informe</field>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="default" eval="False" />
+            <field name="dpi" eval="90"/>
+            <field name="margin_top" eval="40"/>
+            <field name="margin_right" eval="20"/>
+            <field name="margin_bottom" eval="30"/>
+            <field name="margin_left" eval="20"/>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing" eval="30"/>
+        </record>
+
+    <report id="plan_mejoras.action_report_detalle_plan_mejoras"
+            string="Informe del Plan Mejoras"
+            model="pm.plan"
+            report_type="qweb-pdf"
+            paperformat="plan_mejoras.paperformat_portrait_a4"
+            groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"
+            name="plan_mejoras.report_detalle_plan_mejoras"
+            print_report_name="'%s' % (object.name)"/>
+
+</odoo>

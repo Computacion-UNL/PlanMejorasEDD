@@ -1,0 +1,150 @@
+<odoo>
+    <template id="plan_mejoras.report_detalle_plan_mejoras">
+        <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="obj">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div style="font-family: 'Open Sans', sans-serif; font-size: 16pt;
+                                color: #000000">
+                                <h1 align="center">UNIVERSIDAD NACIONAL DE LOJA</h1>
+                                <h3 align="center">FACULTAD DE LA ENERGÍA, LAS INDUSTRIAS Y LOS RECURSOS NATURALES NO RENOVABLES</h3>
+                                <br/>
+                                <h3 align="center"><t t-esc="obj.user_ids.company_id.name"/></h3>
+                                <br/>
+                                <br/>
+                                <h1 align="center"><t t-esc="obj.name"/></h1>
+                                <br/>
+                                <h3 align="center">Elaborado por: </h3>
+                                <br/>
+                                <br/>
+                                <t t-foreach="request.env['res.users'].search([])" t-as="consejo">
+                                    <t t-if="consejo.has_group('plan_mejoras.res_groups_docente_consejo') or consejo.has_group('plan_mejoras.res_groups_administrador')">
+                                        <ul align="center">
+                                            <li align="center"><span><t t-esc="consejo.name"/></span></li>
+                                        </ul>
+                                    </t>
+                                </t>
+                                <br/>
+                                <br/>
+                                <h3 align="center">LOJA - ECUADOR </h3>
+                                <span align="center" t-esc="fecha"/>
+                            </div>
+                            <br/>
+                            <br/>
+                            <div style="font-family: 'Open Sans', sans-serif; font-size: 14pt;
+                                color: #000000">
+                                <span><b>Periodo Académico:</b>
+                                <t t-esc="obj.fecha_inicio"/> /
+
+                                <t t-esc="obj.fecha_fin"/></span>
+                                <br/>
+                            </div>
+                            <br/>
+
+                            <div style="font-family: 'Open Sans', sans-serif; font-size: 14pt;
+                                color: #000000; text-align: justify">
+                                <div class="page"/>
+                                        <p style="page-break-after:always;">   </p>
+                                        <span><b>LEGALIZACIÓN</b> <br/><br/><br/><br/><br/></span>
+                                <t t-foreach="request.env['res.users'].search([])" t-as="consejo">
+                                    <t t-if="consejo.has_group('plan_mejoras.res_groups_administrador')">
+                                        <span>Firma:___________________________</span><br/>
+                                        <b><span><t t-esc="consejo.function"/></span></b>
+                                        <br/><br/><br/><br/><br/>
+                                    </t>
+                                    <t t-if="consejo.has_group('plan_mejoras.res_groups_docente_consejo') and not consejo.has_group('plan_mejoras.res_groups_administrador')">
+                                        <span>Firma:___________________________</span><br/>
+                                        <b><span><t t-esc="consejo.function"/></span></b>
+                                        <br/><br/><br/><br/><br/>
+                                    </t>
+                                </t>
+
+                                <div class="page"/>
+                                    <p style="page-break-after:always;">   </p>
+                                        <span><b>INTRODUCCIÓN</b> <br/><br/><t t-raw="obj.introduccion"/></span>
+                                        <div class="page"/>
+                                        <p style="page-break-after:always;">   </p>
+                                        <span><b>OBJETIVOS</b> <br/><br/><t t-raw="obj.objetivo"/></span>
+                                        <div class="page"/>
+                                        <p style="page-break-after:always;">   </p>
+                                        <span align="left"><b>DETALLES DE LAS TAREAS REALIZADAS POR LOS DOCENTES DE LA CIS-UNL</b></span>
+                                        <br/>
+                                        <t t-foreach="request.env['res.users'].search([])" t-as="doc1">
+                                            <t t-if="doc1.has_group('plan_mejoras.res_groups_docente')">
+                                            <br/>
+                                            <b align="center">Docente:</b> <span t-esc="doc1.name"/>
+                                            <table class="table table-condensed table-bordered">
+                                                <thead>
+                                                    <th style="width: 65%">Nombre de la Tarea</th>
+                                                    <th class="text-center" style="width: 15%">Descripción de la Tarea</th>
+                                                    <th class="text-center" style="width: 20%">Ponderación</th>
+                                                    <th class="text-center" style="width: 20%">Debilidades</th>
+                                                    <th class="text-center" style="width: 20%">Evidencias</th>
+                                                    <th class="text-center" style="width: 20%">Estado</th>
+                                                </thead>
+                                                <t t-foreach="request.env['pm.tarea'].search([('user_id', '=', doc1.id)])" t-as="doc">
+                                                    <tbody>
+                                                        <td class="text-center"><span t-esc="doc.name"/></td>
+                                                        <td class="text-center"><span t-raw="doc.description"/></td>
+                                                        <td class="text-center"><span t-field="doc.ponderacion"/></td>
+                                                        <td class="text-center"><span t-field="doc.debilidad_id.name"/></td>
+                                                        <td class="text-center">
+                                                            <t t-foreach="request.env['pm.evidencia'].search([])" t-as="evi">
+                                                                <t t-if="evi.tareas_ids.id == doc.id">
+                                                                    <ul >
+                                                                        <li align="center"><span t-field="evi.name"/></li>
+                                                                    </ul>
+                                                                </t>
+                                                            </t>
+                                                        </td>
+                                                        <td class="text-center"><span t-field="doc.estado_id"/></td>
+                                                    </tbody>
+                                                </t>
+                                            </table>
+                                        </t>
+                                        </t>
+                                        <t t-if="obj.add_resultados == True">
+                                            <div class="page"/>
+                                            <p style="page-break-after:always;">   </p>
+                                            <span align="left"><b>RESULTADOS DE LA EVALUACIÓN AL DESEMPEÑO DOCENTE</b></span>
+                                            <br/>
+                                            <t t-foreach="request.env['res.users'].search([])" t-as="doc2">
+                                                <br/>
+                                                <t t-if="doc2.has_group('plan_mejoras.res_groups_docente')">
+                                                <span><b>Docente:</b> <t t-esc="doc2.name"></t></span>
+                                                <br/>
+                                                <table class="table table-condensed table-bordered">
+                                                    <thead>
+                                                        <th class="text-center" style="width: 65%">Criterios Evaluación</th>
+                                                        <th class="text-center" style="width: 65%">Calificación</th>
+                                                    </thead>
+                                                    <t t-foreach="request.env['pm.criterio'].search([('user_id', '=', doc2.id)])" t-as="crt">
+                                                        <tbody>
+                                                            <td class="text-left"><span t-esc="crt.criterionombre_id.name"/></td>
+                                                            <td class="text-left"><span t-esc="crt.calificacion"/></td>
+                                                        </tbody>
+                                                    </t>
+                                                </table>
+                                                <span><b>Valoración Cualitativa:</b> <t t-esc="doc2.us_cat"></t></span>
+                                                <br/>
+                                            </t>
+                                            </t>
+                                        </t>
+                                        <div class="page"/>
+                                        <p style="page-break-after:always;">   </p>
+                                        <span><b>CONCLUSIONES</b> <br/><br/><span t-raw="obj.conclusion"/></span>
+                                        <div class="page"/>
+                                        <p style="page-break-after:always;">   </p>
+                                        <span><b>RECOMENDACIONES</b> <br/><br/><span t-raw="obj.recomendacion"/></span>
+                                        <t t-if="obj.add_anexos == True">
+                                            <div class="page"/>
+                                                <p style="page-break-after:always;">   </p>
+                                                <span><b>ANEXOS</b></span><br/>
+                                        </t>
+                                    </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+    </template>
+</odoo>
